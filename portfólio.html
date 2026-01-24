@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Portfólio | Editor & Designer</title>
+    <meta name="description" content="Portfólio de Edição de Vídeo, Design e Motion.">
+    <meta name="theme-color" content="#050505">
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================================= */
+        /* 1. CONFIGURAÇÕES GERAIS                  */
+        /* ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+
+        body { 
+            background-color: #050505; 
+            color: white; 
+            font-family: 'Syne', sans-serif;
+            overflow-x: hidden; 
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* PRELOADER */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-spinner {
+            width: 50px; height: 50px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #00eaff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* TEXTURA DE TV */
+        body::before {
+            content: " "; display: block; position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 999;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none; 
+        }
+
+        /* ========================================= */
+        /* 2. CAPA (HERO SECTION)                   */
+        /* ========================================= */
+        .hero-section {
+            height: 100vh; height: 100svh; width: 100%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+
+        .minha-imagem {
+            width: 40%; height: auto; aspect-ratio: 16/9; 
+            border-radius: 20px; 
+            box-shadow: 0 0 60px rgba(0,0,0,0.5);
+            object-fit: cover; 
+            position: relative; z-index: 1000; 
+            will-change: transform;
+        }
+
+        .texto-overlay { 
+            position: absolute; 
+            z-index: 2000; 
+            text-align: center; pointer-events: none; width: 90%; 
+            transform: translateZ(100px); 
+        }
+
+        h1 { 
+            font-size: 5rem; margin: 0; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px; 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            line-height: 1.1;
+        }
+
+        p { font-size: 1.5rem; font-weight: 400; margin-top: 15px; opacity: 0.9; }
+
+        .hero-disclaimer {
+            position: absolute; bottom: 90px; left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 2001;
+            font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); opacity: 1; 
+            text-align: center; width: 90%; max-width: 600px;
+            pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .disclaimer-link { color: white; text-decoration: underline; cursor: pointer; pointer-events: auto; transition: 0.3s; }
+        .disclaimer-link:hover { color: #00eaff; text-shadow: 0 0 10px rgba(0, 234, 255, 0.8); opacity: 1; }
+
+        .scroll-indicator {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 2001; text-align: center; opacity: 0.7; animation: flutuar 2s infinite;
+        }
+        .scroll-indicator span { font-size: 0.8rem; letter-spacing: 2px; display: block; margin-bottom: 5px; }
+        .scroll-indicator .arrow { font-size: 1.5rem; }
+        @keyframes flutuar { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 10px); } }
+
+        /* ========================================= */
+        /* 3. HUB DE PORTFÓLIO (BOTÕES)             */
+        /* ========================================= */
+        .portfolio-hub {
+            position: relative;
+            z-index: 10;
+            background: #050505;
+            padding: 100px 10%;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hub-title {
+            font-size: 2rem;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #666;
+            text-align: center;
+        }
+
+        .hub-grid {
+            display: grid;
+            /* Alterado para 3 colunas para acomodar os 3 botões restantes */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .hub-card {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .hub-card h3 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            z-index: 2;
+            position: relative;
+            transition: color 0.3s;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hub-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .hub-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .hub-card:hover::before {
+            opacity: 1;
+        }
+
+        /* --- CORES ESPECÍFICAS DOS BOTÕES --- */
+
+        /* 1. ANIMAÇÃO (Roxo - After Effects) */
+        .card-animacao:hover { border-color: #d06dff; box-shadow: 0 0 30px rgba(208, 109, 255, 0.2); }
+        .card-animacao:hover h3 { color: #d06dff; text-shadow: 0 0 20px rgba(208, 109, 255, 0.6); }
+        .card-animacao::before { background: linear-gradient(45deg, transparent, rgba(208, 109, 255, 0.15)); }
+
+        /* 2. DESIGN GRÁFICO (Azul Cyan) */
+        .card-design:hover { border-color: #00eaff; box-shadow: 0 0 30px rgba(0, 234, 255, 0.2); }
+        .card-design:hover h3 { color: #00eaff; text-shadow: 0 0 20px rgba(0, 234, 255, 0.6); }
+        .card-design::before { background: linear-gradient(45deg, transparent, rgba(0, 234, 255, 0.15)); }
+
+        /* 3. EDIÇÃO DE VÍDEO (Verde) */
+        .card-video:hover { border-color: #2ecc71; box-shadow: 0 0 30px rgba(46, 204, 113, 0.2); }
+        .card-video:hover h3 { color: #2ecc71; text-shadow: 0 0 20px rgba(46, 204, 113, 0.6); }
+        .card-video::before { background: linear-gradient(45deg, transparent, rgba(46, 204, 113, 0.15)); }
+
+
+        /* ========================================= */
+        /* 4. SERVIÇOS (LISTA)                      */
+        /* ========================================= */
+        .servicos-section {
+            background-color: #050505; padding: 60px 10% 100px 10%;
+            display: flex; flex-direction: column; justify-content: center;
+            position: relative; z-index: 10; width: 100%;
+        }
+        .servico-item {
+            border-top: 1px solid #333; padding: 40px 0;
+            display: flex; align-items: baseline; transition: all 0.3s ease; cursor: default;
+        }
+        .servico-item:last-child { border-bottom: 1px solid #333; }
+        .servico-item:hover {
+            background-color: #111; padding-left: 30px;
+            border-top: 1px solid #fff; border-bottom: 1px solid #fff; 
+        }
+        .servico-item:hover .servico-nome { text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .num { font-size: 1.2rem; color: #888; margin-right: 30px; font-family: monospace; }
+        .servico-nome { font-size: 3rem; flex-grow: 1; text-transform: uppercase; margin: 0; color: #fff; transition: 0.3s; font-weight: 700; }
+        .servico-desc { font-size: 1.2rem; color: #ccc; margin: 0; text-align: right; }
+
+        /* ========================================= */
+        /* 5. MARQUEE                               */
+        /* ========================================= */
+        .software-marquee {
+            background: #111; padding: 25px 0; overflow: hidden; white-space: nowrap;
+            position: relative; z-index: 10; border-top: 1px solid #333; border-bottom: 1px solid #333; width: 100%;
+        }
+        .track { display: inline-flex; align-items: center; animation: letreiro 20s linear infinite; }
+        .track span { font-size: 1.5rem; font-weight: bold; color: #666; margin-left: 40px; letter-spacing: 2px; }
+        .icon-soft { width: 30px; height: 30px; margin-left: 15px; filter: grayscale(100%); opacity: 0.5; transition: all 0.4s ease; }
+        .software-marquee:hover { background: #1a1a1a; }
+        .software-marquee:hover .icon-soft { filter: grayscale(0%); opacity: 1; transform: scale(1.2); }
+        .software-marquee:hover span { color: #fff; }
+        @keyframes letreiro { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* ========================================= */
+        /* 6. SOBRE MIM                             */
+        /* ========================================= */
+        .sobre-section {
+            background-color: #050505; padding: 120px 10%; display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid #222; position: relative; z-index: 10; width: 100%; min-height: 100vh;
+        }
+        .sobre-content { 
+            display: flex; align-items: center; justify-content: center; gap: 80px; max-width: 1200px; width: 100%; flex-wrap: wrap; 
+        }
+        .sobre-foto img {
+            width: 100%; max-width: 400px; height: auto; aspect-ratio: 4/5;
+            object-fit: cover; border-radius: 10px;
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.15); transition: 0.5s; 
+        }
+        .sobre-foto img:hover { box-shadow: 0 0 100px rgba(255, 255, 255, 0.3); transform: scale(1.02); }
+
+        .sobre-texto { flex: 1; min-width: 300px; max-width: 600px; text-align: left; }
+        .sobre-texto h2 { font-size: 4rem; margin-bottom: 10px; line-height: 1; font-weight: 800; }
+        .sobre-texto h4 { font-size: 1.2rem; color: #666; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
+        .sobre-texto p { font-size: 1.1rem; color: #ccc; margin-bottom: 20px; line-height: 1.6; }
+        
+        .sobre-detalhes { margin-top: 30px; display: flex; gap: 20px; justify-content: flex-start; }
+        .sobre-detalhes span { background: #111; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem; font-weight: bold; border: 1px solid #333; }
+        
+        /* ========================================= */
+        /* 7. CONTATO & FOOTER                      */
+        /* ========================================= */
+        .contato-section {
+            height: auto; padding: 80px 20px; background-color: #050505;
+            display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center;
+            border-top: 1px solid #222; position: relative; z-index: 10;
+        }
+        .btn-contato {
+            margin-top: 30px; padding: 15px 50px; background: white; color: black;
+            text-decoration: none; font-weight: bold; border-radius: 50px; font-size: 1.2rem; transition: 0.3s;
+        }
+        .btn-contato:active { transform: scale(0.95); }
+        .btn-contato:hover { transform: scale(1.1); background: #ddd; }
+        .back-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background: white; color: black; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; text-decoration: none; font-weight: bold; z-index: 100;
+            opacity: 0; visibility: hidden; transition: 0.3s; box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        .back-to-top.show { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: scale(1.1); background: #ddd; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.8rem; letter-spacing: 2px; word-wrap: break-word; }
+            p { font-size: 1rem; padding: 0 20px; }
+            .minha-imagem { width: 85%; height: 50vh; border-radius: 10px; }
+            
+            /* Ajuste Hub Mobile */
+            .hub-grid { grid-template-columns: 1fr; gap: 15px; }
+            .hub-card { height: 180px; }
+
+            .servicos-section { padding: 60px 5%; }
+            .servico-item { flex-direction: column; padding: 25px 0; }
+            .servico-nome { font-size: 2rem; margin-bottom: 5px; }
+            .servico-item:hover { padding-left: 0; background: transparent; border-top: 1px solid #333; }
+            .num { display: none; }
+            .track span { font-size: 1rem; margin-left: 20px; }
+            .icon-soft { width: 20px; height: 20px; margin-left: 10px; }
+            
+            /* Ajuste Sobre Mim Mobile */
+            .sobre-content { flex-direction: column; gap: 40px; text-align: center; }
+            .sobre-texto { text-align: center; }
+            .sobre-texto h2 { font-size: 2.5rem; }
+            .sobre-detalhes { justify-content: center; }
+            
+            .contato-section { padding: 60px 20px 120px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div class="hero-section">
+        <video class="minha-imagem" autoplay loop muted playsinline preload="auto">
+            <source src="videos/showreel-capa.mp4" type="video/mp4">
+        </video>
+        <div class="texto-overlay">
+            <h1>RAFAEL SOARES</h1>
+            <p>EDITOR & MOTION DESIGNER</p>
+        </div>
+        <div class="hero-disclaimer">
+            *Os vídeos deste portfólio foram editados por mim. <a href="https://www.youtube.com/playlist?list=PLGrEAbVMjvNhuY1LS9IvyzUx_ZV4fIQvG" target="_blank" class="disclaimer-link">O material bruto original pertence aos seus respectivos proprietários.</a>
+        </div>
+        <div class="scroll-indicator">
+            <span>EXPLORAR</span>
+            <div class="arrow">↓</div>
+        </div>
+    </div>
+
+    <section class="portfolio-hub">
+        <div class="hub-title">Selecione uma categoria</div>
+        
+        <div class="hub-grid">
+            <a href="animacao.html" class="hub-card card-animacao">
+                <h3>ANIMAÇÃO</h3>
+            </a>
+
+            <a href="video.html" class="hub-card card-video">
+                <h3>EDIÇÃO DE VÍDEO</h3>
+            </a>
+
+            <a href="design.html" class="hub-card card-design">
+                <h3>DESIGN GRÁFICO</h3>
+            </a>
+        </div>
+    </section>
+
+    <div class="servicos-section">
+        <div class="servico-item">
+            <span class="num">01</span>
+            <h3 class="servico-nome">EDIÇÃO DE VÍDEO</h3>
+            <p class="servico-desc">Publicidade, YouTube & Reels</p>
+        </div>
+        <div class="servico-item">
+            <span class="num">02</span>
+            <h3 class="servico-nome">MOTION GRAPHICS</h3>
+            <p class="servico-desc">Animações 2D & VFX</p>
+        </div>
+        <div class="servico-item">
+            <span class="num">03</span>
+            <h3 class="servico-nome">DESIGN GRÁFICO</h3>
+            <p class="servico-desc">Thumbnails & Identidade</p>
+        </div>
+    </div>
+
+    <div class="software-marquee">
+        <div class="track">
+            <span>ADOBE PREMIERE</span> <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/Adobe_Premiere_Pro_CC_icon.svg" class="icon-soft" alt="Premiere">
+            <span>AFTER EFFECTS</span> <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Adobe_After_Effects_CC_icon.svg" class="icon-soft" alt="After Effects">
+            <span>PHOTOSHOP</span> <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" class="icon-soft" alt="Photoshop">
+            <span>ILLUSTRATOR</span> <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg" class="icon-soft" alt="Illustrator">
+            <span>ADOBE PREMIERE</span> <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/Adobe_Premiere_Pro_CC_icon.svg" class="icon-soft">
+            <span>AFTER EFFECTS</span> <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Adobe_After_Effects_CC_icon.svg" class="icon-soft">
+            <span>PHOTOSHOP</span> <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" class="icon-soft">
+            <span>ILLUSTRATOR</span> <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg" class="icon-soft">
+            <span>ADOBE PREMIERE</span> <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/Adobe_Premiere_Pro_CC_icon.svg" class="icon-soft">
+        </div>
+    </div>
+
+    <div class="sobre-section">
+        <div class="sobre-content">
+            <div class="sobre-foto">
+                <img src="minha-foto.png" alt="Foto de Rafael Soares">
+            </div>
+            
+            <div class="sobre-texto">
+                <h2>QUEM SOU EU</h2>
+                <h4>Visual Storyteller & Editor</h4>
+                <p>
+                    Mais do que apenas cortar vídeos, eu crio narrativas. Com experiência em <strong>ritmo e sound design</strong>, meu objetivo é transformar material bruto em conteúdo que prende a atenção do primeiro ao último segundo.
+                </p>
+                <p>
+                    Especialista na Suíte Adobe. Pronto para encarar projetos desafiadores.
+                </p>
+                <div class="sobre-detalhes">
+                    <span>📍 Brasil</span>
+                    <span>🎥 Editor Pro</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="contato-section">
+        <h2 style="font-size: 3rem; margin-bottom: 20px;">VAMOS CONVERSAR!</h2>
+        <p style="color: gray; margin-bottom: 30px;">Pronto para elevar o nível do seu projeto?</p>
+        
+        <a href="mailto:rafael.sstx@gmail.com" class="btn-contato">Enviar E-mail</a>
+
+        <div style="margin-top: 40px; display: flex; gap: 20px;">
+            <a href="https://www.linkedin.com/in/rafael-soares-01969a230" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="30" style="filter: invert(1); opacity: 0.6; transition: 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+            </a>
+            <a href="https://instagram.com/ownedbyrafa" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="30" style="filter: invert(1); opacity: 0.6; transition: 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+            </a>
+        </div>
+        <p style="margin-top: 40px; font-size: 0.8rem; opacity: 0.5;">© 2026 Rafael Soares</p>
+    </div>
+
+    <a href="#" class="back-to-top" aria-label="Voltar ao topo">↑</a>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        let isMobile = window.innerWidth < 768;
+
+        // HERO ANIMATION
+        let tlHero = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".hero-section", start: "top top", end: isMobile ? "+=800" : "+=1500", scrub: 1, pin: true
+            }
+        });
+        tlHero.to(".minha-imagem", { scale: 3, ease: "none" }, 0); 
+        tlHero.to(".texto-overlay", { opacity: 0, scale: 1.5 }, 0); 
+        tlHero.to(".scroll-indicator", { opacity: 0 }, 0); 
+        tlHero.to(".hero-disclaimer", { opacity: 0 }, 0); 
+
+        window.addEventListener("load", () => {
+            ScrollTrigger.refresh();
+            const preloader = document.getElementById('preloader');
+            preloader.style.opacity = '0';
+            setTimeout(() => { preloader.style.display = 'none'; }, 500);
+        });
+
+        const btnTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) { btnTop.classList.add('show'); } 
+            else { btnTop.classList.remove('show'); }
+        });
+    </script>
+</body>
+</html>
