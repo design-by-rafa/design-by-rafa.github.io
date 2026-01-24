@@ -14,7 +14,7 @@
 
     <style>
         /* ========================================= */
-        /* 1. SETUP GERAL & TEXTURAS                */
+        /* 1. SETUP GERAL                           */
         /* ========================================= */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -28,10 +28,9 @@
             width: 100vw;
         }
 
-        /* TEXTO LIMPO */
         p { font-size: 1rem; line-height: 1.5; color: #ccc; font-weight: 400; }
 
-        /* SCANLINE OVERLAY */
+        /* Background & Scanlines */
         body::after {
             content: " "; display: block;
             position: fixed; top: 0; left: 0; bottom: 0; right: 0;
@@ -40,45 +39,26 @@
             z-index: 9000; background-size: 100% 3px, 3px 100%; pointer-events: none;
         }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f0518; }
-        ::-webkit-scrollbar-thumb { background: #d06dff; border-radius: 4px; }
-
-        /* PRELOADER */
-        #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0f0518; z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
-        }
-        .loader-ae {
-            width: 50px; height: 50px; background: #d06dff;
-            transform: rotate(45deg); animation: pulseKeyframe 1s infinite alternate;
-            box-shadow: 0 0 20px #d06dff;
-        }
-        @keyframes pulseKeyframe { 0% { transform: rotate(45deg) scale(0.8); } 100% { transform: rotate(45deg) scale(1.2); } }
-
-        /* BACKGROUND ELEMENTS */
         .ae-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 60px 60px; pointer-events: none; z-index: 0; opacity: 0.5;
         }
 
+        /* Keyframes Flutuantes (Decoração) */
         .floating-keyframe {
             position: fixed; width: 18px; height: 18px;
             transform: rotate(45deg); z-index: 1; opacity: 0.6; pointer-events: none;
             box-shadow: 0 0 15px currentColor;
-            animation: floatKf 6s ease-in-out infinite;
         }
-        @keyframes floatKf { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(-20px); } }
+        .fk-1 { top: 20%; left: 10%; color: #ff00e6; } 
+        .fk-2 { top: 60%; right: 15%; color: #ffe600; } 
+        .fk-3 { top: 80%; left: 30%; color: #00eaff; }
 
-        .fk-1 { top: 20%; left: 10%; color: #ff00e6; animation-delay: 0s; } 
-        .fk-2 { top: 60%; right: 15%; color: #ffe600; animation-delay: 2s; } 
-        .fk-3 { top: 80%; left: 30%; color: #00eaff; animation-delay: 4s; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f0518; }
+        ::-webkit-scrollbar-thumb { background: #d06dff; border-radius: 4px; }
 
-        /* BOTÃO VOLTAR */
         .back-home {
             position: fixed; top: 20px; left: 20px; z-index: 3000;
             padding: 8px 15px; background: rgba(0,0,0,0.4);
@@ -104,26 +84,21 @@
             text-transform: uppercase;
             background: linear-gradient(to bottom, #fff 0%, #d06dff 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(208, 109, 255, 0.5)) drop-shadow(0 0 40px rgba(208, 109, 255, 0.3));
-            opacity: 0; animation: fadeIn 1.5s ease forwards;
+            filter: drop-shadow(0 0 15px rgba(208, 109, 255, 0.5));
         }
-        @keyframes fadeIn { to { opacity: 1; } }
 
         .hero-subtitle { 
             font-size: 1rem; font-weight: 600; margin-top: 25px; 
             color: #d06dff; letter-spacing: 6px; text-transform: uppercase; 
             background: rgba(208, 109, 255, 0.1); display: inline-block; padding: 8px 20px; border-radius: 50px;
             border: 1px solid rgba(208, 109, 255, 0.3);
-            opacity: 0; animation: fadeIn 1s ease 0.5s forwards;
         }
 
-        /* SCROLL DOWN INDICATOR */
         .scroll-hint {
             position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center; gap: 10px;
             opacity: 0.7; animation: bounce 2s infinite; cursor: pointer;
         }
-        .scroll-text { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; }
         .mouse-icon { width: 20px; height: 35px; border: 2px solid white; border-radius: 15px; position: relative; }
         .mouse-wheel {
             width: 2px; height: 6px; background: white; border-radius: 2px;
@@ -133,9 +108,89 @@
         @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); opacity: 0.5; } 50% { transform: translate(-50%, 10px); opacity: 1; } }
         @keyframes scrollWheel { 0% { top: 6px; opacity: 1; } 100% { top: 20px; opacity: 0; } }
 
+        /* ========================================= */
+        /* 3. GRAPH EDITOR + MARQUEE                */
+        /* ========================================= */
+        .graph-editor-section {
+            position: relative; width: 100%; 
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: #0a0a0a; border-top: 1px solid #333; border-bottom: 1px solid #333;
+            z-index: 20; padding: 80px 0; gap: 40px; /* Gap menor para aproximar a marquee */
+        }
+
+        /* GRÁFICO */
+        .graph-container {
+            width: 80%; height: 400px; position: relative;
+            background: 
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px; border: 1px solid #333;
+            border-radius: 4px;
+        }
+        .graph-label {
+            position: absolute; top: -30px; left: 0; 
+            color: #d06dff; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; font-weight: bold;
+        }
+        svg { width: 100%; height: 100%; overflow: visible; }
+        .motion-curve { fill: none; stroke: #d06dff; stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 8px #d06dff); }
+        .motion-ball { fill: white; stroke: #d06dff; stroke-width: 2; filter: drop-shadow(0 0 10px white); }
+        .bezier-handle-line { stroke: #ffff00; stroke-width: 1; opacity: 0.6; }
+        .bezier-handle-point { fill: #ffff00; width: 6px; height: 6px; }
+
+        /* MARQUEE CORRIGIDA (GLOW LIVRE) */
+        .marquee-wrapper {
+            width: 100%; 
+            overflow: hidden; 
+            position: relative;
+            /* Padding extra vertical para o glow não cortar */
+            padding: 70px 0; 
+            margin-top: -30px; 
+            
+            /* Máscara apenas nas laterais, não em cima/baixo */
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        .marquee-track {
+            display: flex; width: max-content; gap: 80px;
+            animation: scrollMarquee 25s linear infinite;
+            padding-left: 50px;
+        }
+
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        .marquee-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0.5; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer; position: relative;
+        }
+
+        .marquee-item img { 
+            width: 60px; height: 60px; object-fit: contain; margin-bottom: 15px;
+            transition: 0.4s; filter: drop-shadow(0 0 5px rgba(255,255,255,0.1));
+        }
+
+        .marquee-item span { 
+            font-size: 0.9rem; font-weight: 700; color: #fff; letter-spacing: 1px; 
+            opacity: 0; transform: translateY(-10px); transition: 0.3s;
+        }
+
+        /* EFEITO HOVER EXPLOSIVO */
+        .marquee-item:hover { 
+            opacity: 1; transform: scale(1.3); z-index: 100; /* Z-Index alto */
+        }
+        .marquee-item:hover img {
+            filter: drop-shadow(0 0 20px #d06dff) drop-shadow(0 0 60px rgba(208, 109, 255, 0.8));
+        }
+        .marquee-item:hover span { opacity: 1; transform: translateY(0); text-shadow: 0 0 15px #d06dff; }
+
 
         /* ========================================= */
-        /* 3. GALERIA                               */
+        /* 4. GALERIA                               */
         /* ========================================= */
         .gallery-wrapper { position: relative; width: 100%; height: 100vh; overflow: hidden; z-index: 10; }
 
@@ -150,7 +205,7 @@
             min-width: 80vw; height: 70vh; margin: 0 5vw;
             display: flex; align-items: center; justify-content: center;
             flex-direction: column; scroll-snap-align: center; position: relative; cursor: pointer; 
-            background: #121212; border: 1px solid #333; border-radius: 15px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #121212; border: 1px solid #333; border-radius: 15px; transition: 0.4s;
             padding: 0 10px;
         }
         .projeto-card:hover { transform: scale(1.02); border-color: #d06dff; box-shadow: 0 0 40px rgba(208, 109, 255, 0.1); }
@@ -169,21 +224,11 @@
         }
 
         .info-projeto { text-align: center; margin-top: 25px; width: 100%; }
-        
-        .info-projeto h3 { 
-            font-size: 2.2rem; margin-bottom: 5px; color: #fff; font-weight: 800; text-transform: uppercase; 
-            word-wrap: break-word; max-width: 100%;
-        }
-        
+        .info-projeto h3 { font-size: 2.2rem; margin-bottom: 5px; color: #fff; font-weight: 800; text-transform: uppercase; }
         .info-projeto span { color: #00eaff; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
-        
-        .ver-mais-btn {
-            margin-top: 15px; font-size: 0.75rem; text-transform: uppercase; font-weight: bold;
-            color: #888; letter-spacing: 1px; transition: 0.3s;
-        }
+        .ver-mais-btn { margin-top: 15px; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; color: #888; letter-spacing: 1px; transition: 0.3s; }
         .projeto-card:hover .ver-mais-btn { color: #d06dff; text-shadow: 0 0 10px rgba(208, 109, 255, 0.5); }
 
-        /* SETAS */
         .nav-arrow {
             position: absolute; top: 50%; transform: translateY(-50%);
             width: 50px; height: 50px; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
@@ -196,7 +241,7 @@
         .nav-next { right: 15px; }
 
         /* ========================================= */
-        /* 4. MODAIS                                */
+        /* 5. MODAIS                                */
         /* ========================================= */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -210,8 +255,7 @@
             display: none; width: 700px; max-width: 90%; height: auto; max-height: 85vh;
             background: #131313; border: 1px solid #333; border-top: 3px solid #d06dff;
             border-radius: 8px; flex-direction: column;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
-            transform: scale(0.95); transition: 0.3s;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9); transform: scale(0.95); transition: 0.3s;
         }
         .skeuo-modal.active-content { display: flex; transform: scale(1); }
 
@@ -220,70 +264,45 @@
             display: flex; justify-content: space-between; align-items: center;
             background: #1a1a1a; flex-shrink: 0;
         }
-        
         .modal-title-box { display: flex; align-items: center; gap: 15px; overflow: hidden; }
         .soft-icon { width: 30px; height: 30px; object-fit: contain; }
-        
-        .modal-title-box h2 { 
-            font-size: 1.2rem; margin: 0; color: white; font-weight: 700; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-
+        .modal-title-box h2 { font-size: 1.2rem; margin: 0; color: white; font-weight: 700; }
         .modal-scroll-area { padding: 25px; overflow-y: auto; }
-
         .close-btn { background: none; border: none; color: #666; font-size: 1.8rem; cursor: pointer; transition: 0.3s; line-height: 1; }
         .close-btn:hover { color: #ff4757; transform: rotate(90deg); }
-
         .modal-video { width: 100%; border-radius: 4px; margin-bottom: 25px; border: 1px solid #333; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        
         .modal-text { font-size: 1rem; line-height: 1.6; color: #aaa; margin-bottom: 15px; }
         .modal-text strong { color: #00eaff; }
 
         /* ========================================= */
-        /* 5. SEÇÃO DE CONTATO (CTA) - NOVA!        */
+        /* 6. CTA                                   */
         /* ========================================= */
         .cta-section {
             padding: 80px 20px;
             background: linear-gradient(to top, rgba(208, 109, 255, 0.05) 0%, transparent 100%);
-            text-align: center;
-            position: relative; z-index: 10;
-            border-top: 1px solid #222;
+            text-align: center; position: relative; z-index: 10; border-top: 1px solid #222;
         }
-
-        .cta-title {
-            font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 30px;
-            text-transform: uppercase;
-        }
-
+        .cta-title { font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 30px; text-transform: uppercase; }
         .btn-cta {
             display: inline-block; padding: 15px 40px;
             background: #d06dff; color: black; font-weight: 800;
-            text-decoration: none; border-radius: 50px;
-            text-transform: uppercase; letter-spacing: 1px;
+            text-decoration: none; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px;
             transition: 0.3s; box-shadow: 0 0 20px rgba(208, 109, 255, 0.3);
         }
         .btn-cta:hover { transform: scale(1.05); background: white; box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); }
-
         .social-links { margin-top: 40px; display: flex; gap: 20px; justify-content: center; }
-        .social-icon { 
-            width: 30px; height: 30px; filter: invert(1); opacity: 0.6; transition: 0.3s; 
-        }
+        .social-icon { width: 30px; height: 30px; filter: invert(1); opacity: 0.6; transition: 0.3s; }
         .social-icon:hover { opacity: 1; transform: scale(1.1); filter: invert(1) drop-shadow(0 0 5px #00eaff); }
-
         .footer-copyright { margin-top: 50px; opacity: 0.4; font-size: 0.7rem; letter-spacing: 1px; }
 
         @media (max-width: 768px) {
             h1 { font-size: 3rem; letter-spacing: -2px; } 
-            
             .projeto-card { min-width: 85vw; height: 60vh; margin: 0 7.5vw; }
-            .info-projeto h3 { font-size: 1.5rem; white-space: normal; }
-
             .skeuo-modal { width: 95%; height: 80vh; }
-            .modal-title-box h2 { font-size: 1rem; }
-            .soft-icon { width: 25px; height: 25px; }
-            .nav-arrow { width: 40px; height: 40px; }
             
-            .cta-title { font-size: 1.8rem; }
+            .graph-editor-section { height: auto; padding: 60px 0; }
+            .graph-container { height: 250px; width: 90%; }
+            .marquee-track { gap: 40px; }
         }
     </style>
 </head>
@@ -296,10 +315,6 @@
 
     <a href="index.html" class="back-home">← HUB</a>
 
-    <div id="preloader">
-        <div class="loader-ae"></div>
-    </div>
-
     <div class="hero-section">
         <div class="texto-overlay">
             <h1>MOTION<br>DESIGN</h1>
@@ -307,7 +322,7 @@
             <p class="hero-subtitle">Visual Storytelling</p>
         </div>
         
-        <div class="scroll-hint" onclick="scrollGallery(1)">
+        <div class="scroll-hint" onclick="document.getElementById('graph-section').scrollIntoView()">
             <div class="mouse-icon">
                 <div class="mouse-wheel"></div>
             </div>
@@ -315,117 +330,124 @@
         </div>
     </div>
 
+    <div class="graph-editor-section" id="graph-section">
+        
+        <div class="graph-container">
+            <span class="graph-label">Speed Graph</span>
+            <svg viewBox="0 0 800 400" preserveAspectRatio="none">
+                <line x1="0" y1="400" x2="200" y2="400" class="bezier-handle-line" />
+                <rect x="197" y="397" class="bezier-handle-point" />
+                <line x1="600" y1="0" x2="800" y2="0" class="bezier-handle-line" />
+                <rect x="597" y="-3" class="bezier-handle-point" />
+                <path id="motionPath" class="motion-curve" d="M0,400 C300,400 500,0 800,0" />
+                <circle id="animBall" class="motion-ball" r="8" cx="0" cy="0" />
+            </svg>
+        </div>
+
+        <div class="marquee-wrapper">
+            <div class="marquee-track">
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Adobe_After_Effects_CC_icon.svg/512px-Adobe_After_Effects_CC_icon.svg.png">
+                    <span>After Effects</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Adobe_Animate_CC_icon.svg/512px-Adobe_Animate_CC_icon.svg.png">
+                    <span>Animate</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Blender_logo_no_text.svg/512px-Blender_logo_no_text.svg.png">
+                    <span>Blender</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Adobe_Illustrator_CC_icon.svg/512px-Adobe_Illustrator_CC_icon.svg.png">
+                    <span>Illustrator</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Adobe_Premiere_Pro_CC_icon.svg/512px-Adobe_Premiere_Pro_CC_icon.svg.png">
+                    <span>Premiere</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/DaVinci_Resolve_17_logo.svg">
+                    <span>DaVinci</span>
+                </div>
+
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Adobe_After_Effects_CC_icon.svg/512px-Adobe_After_Effects_CC_icon.svg.png">
+                    <span>After Effects</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Adobe_Animate_CC_icon.svg/512px-Adobe_Animate_CC_icon.svg.png">
+                    <span>Animate</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Blender_logo_no_text.svg/512px-Blender_logo_no_text.svg.png">
+                    <span>Blender</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Adobe_Illustrator_CC_icon.svg/512px-Adobe_Illustrator_CC_icon.svg.png">
+                    <span>Illustrator</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Adobe_Premiere_Pro_CC_icon.svg/512px-Adobe_Premiere_Pro_CC_icon.svg.png">
+                    <span>Premiere</span>
+                </div>
+                <div class="marquee-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/DaVinci_Resolve_17_logo.svg">
+                    <span>DaVinci</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <div class="gallery-wrapper">
         <button class="nav-arrow nav-prev" onclick="scrollGallery(-1)">‹</button>
         <button class="nav-arrow nav-next" onclick="scrollGallery(1)">›</button>
         
         <div class="galeria-section" id="galeria">
-            
             <div class="projeto-card" onclick="abrirModal(1)">
                 <div class="img-container placeholder-bg">
-                    <video class="img-projeto" autoplay loop muted playsinline preload="auto" poster="https://placehold.co/600x400/000000/FFF?text=Video+1">
-                        <source src="animacao1.mp4" type="video/mp4">
-                    </video>
+                    <video class="img-projeto" autoplay loop muted playsinline preload="auto" poster="https://placehold.co/600x400/000000/FFF?text=Video+1"><source src="animacao1.mp4" type="video/mp4"></video>
                 </div>
-                <div class="info-projeto">
-                    <h3>Explainer Tech</h3>
-                    <span>Motion Graphics</span>
-                    <div class="ver-mais-btn">+ Detalhes</div>
-                </div>
+                <div class="info-projeto"><h3>Explainer Tech</h3><span>Motion Graphics</span><div class="ver-mais-btn">+ Detalhes</div></div>
             </div>
-
             <div class="projeto-card" onclick="abrirModal(2)">
                 <div class="img-container placeholder-bg">
-                    <video class="img-projeto" autoplay loop muted playsinline preload="auto" poster="https://placehold.co/600x400/000000/FFF?text=Video+2">
-                        <source src="animacao2.mp4" type="video/mp4">
-                    </video>
+                    <video class="img-projeto" autoplay loop muted playsinline preload="auto" poster="https://placehold.co/600x400/000000/FFF?text=Video+2"><source src="animacao2.mp4" type="video/mp4"></video>
                 </div>
-                <div class="info-projeto">
-                    <h3>Logo Reveal</h3>
-                    <span>Liquid Animation</span>
-                    <div class="ver-mais-btn">+ Detalhes</div>
-                </div>
+                <div class="info-projeto"><h3>Logo Reveal</h3><span>Liquid Animation</span><div class="ver-mais-btn">+ Detalhes</div></div>
             </div>
-
             <div class="projeto-card" onclick="abrirModal(3)">
                 <div class="img-container placeholder-bg">
                     <img src="animacao3.gif" class="img-projeto" style="object-fit: cover;" alt="Caminhada" onerror="this.src='https://placehold.co/600x400/111/444?text=GIF+Preview'">
                 </div>
-                <div class="info-projeto">
-                    <h3>Character Walk</h3>
-                    <span>Frame by Frame</span>
-                    <div class="ver-mais-btn">+ Detalhes</div>
-                </div>
+                <div class="info-projeto"><h3>Character Walk</h3><span>Frame by Frame</span><div class="ver-mais-btn">+ Detalhes</div></div>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="modalOverlay" onclick="fecharModal()">
-        
         <div class="skeuo-modal" id="modal-1" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <div class="modal-title-box">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Adobe_After_Effects_CC_icon.svg" class="soft-icon" alt="After Effects">
-                    <h2>EXPLAINER VIDEO</h2>
-                </div>
-                <button class="close-btn" onclick="fecharModal()">×</button>
-            </div>
-            <div class="modal-scroll-area">
-                <video class="modal-video" controls preload="auto" style="background:black; min-height:200px;">
-                    <source src="animacao1.mp4" type="video/mp4">
-                </video>
-                <p class="modal-text"><strong>O Briefing:</strong> A startup precisava explicar seu algoritmo complexo em 30 segundos de forma didática.</p>
-                <p class="modal-text"><strong>Solução:</strong> Usei formas geométricas simples e uma paleta de cores limitada para manter o foco na informação. A movimentação segue as curvas de Bezier para garantir fluidez.</p>
-            </div>
+            <div class="modal-header"><div class="modal-title-box"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Adobe_After_Effects_CC_icon.svg/512px-Adobe_After_Effects_CC_icon.svg.png" class="soft-icon"><h2>EXPLAINER VIDEO</h2></div><button class="close-btn" onclick="fecharModal()">×</button></div>
+            <div class="modal-scroll-area"><video class="modal-video" controls><source src="animacao1.mp4" type="video/mp4"></video><p class="modal-text"><strong>Briefing:</strong> Explainer Tech.</p></div>
         </div>
-
         <div class="skeuo-modal" id="modal-2" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <div class="modal-title-box">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Adobe_After_Effects_CC_icon.svg" class="soft-icon" alt="After Effects">
-                    <h2>LOGO REVEAL</h2>
-                </div>
-                <button class="close-btn" onclick="fecharModal()">×</button>
-            </div>
-            <div class="modal-scroll-area">
-                <video class="modal-video" controls preload="auto" style="background:black; min-height:200px;">
-                    <source src="animacao2.mp4" type="video/mp4">
-                </video>
-                <p class="modal-text"><strong>Técnica:</strong> Animação frame a frame combinada com simulação de partículas (Particular).</p>
-                <p class="modal-text">O objetivo era fazer a marca parecer fresca, orgânica e líquida.</p>
-            </div>
+            <div class="modal-header"><div class="modal-title-box"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Adobe_After_Effects_CC_icon.svg/512px-Adobe_After_Effects_CC_icon.svg.png" class="soft-icon"><h2>LOGO REVEAL</h2></div><button class="close-btn" onclick="fecharModal()">×</button></div>
+            <div class="modal-scroll-area"><video class="modal-video" controls><source src="animacao2.mp4" type="video/mp4"></video><p class="modal-text"><strong>Técnica:</strong> Liquid Motion.</p></div>
         </div>
-
         <div class="skeuo-modal" id="modal-3" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <div class="modal-title-box">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Adobe_Animate_CC_icon.svg" class="soft-icon" alt="Animate">
-                    <h2>WALK CYCLE</h2>
-                </div>
-                <button class="close-btn" onclick="fecharModal()">×</button>
-            </div>
-            <div class="modal-scroll-area">
-                <img src="animacao3.gif" style="width:100%; border-radius:4px; margin-bottom:20px; border:1px solid #333; min-height:200px; background:#111;" onerror="this.src='https://placehold.co/600x400/111/444?text=GIF+Placeholder'">
-                <p class="modal-text"><strong>Estudo:</strong> Um ciclo de caminhada clássico feito quadro a quadro.</p>
-                <p class="modal-text">Foquei no "bobbing" (movimento vertical) e no "overlapping action" dos braços.</p>
-            </div>
+            <div class="modal-header"><div class="modal-title-box"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Adobe_Animate_CC_icon.svg/512px-Adobe_Animate_CC_icon.svg.png" class="soft-icon"><h2>WALK CYCLE</h2></div><button class="close-btn" onclick="fecharModal()">×</button></div>
+            <div class="modal-scroll-area"><img src="animacao3.gif" class="modal-video"><p class="modal-text"><strong>Estudo:</strong> Frame a frame.</p></div>
         </div>
-
     </div>
 
     <div class="cta-section">
         <h2 class="cta-title">Vamos tirar sua ideia do papel?</h2>
         <a href="mailto:rafael.sstx@gmail.com" class="btn-cta">Entrar em contato</a>
-        
         <div class="social-links">
-            <a href="https://www.linkedin.com/in/rafael-soares-01969a230" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" class="social-icon" alt="LinkedIn">
-            </a>
-            <a href="https://instagram.com/ownedbyrafa" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" class="social-icon" alt="Instagram">
-            </a>
+            <a href="https://linkedin.com" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" class="social-icon"></a>
+            <a href="https://instagram.com" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" class="social-icon"></a>
         </div>
-        
         <div class="footer-copyright">© 2026 Rafael Soares</div>
     </div>
 
@@ -435,15 +457,33 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        window.addEventListener("load", () => {
-            const preloader = document.getElementById('preloader');
-            preloader.style.opacity = '0';
-            setTimeout(() => { preloader.style.display = 'none'; }, 500);
-        });
-
+        // Keyframes Flutuantes
         gsap.to(".fk-1", { scrollTrigger: { trigger: "body", scrub: 1 }, y: 200 });
         gsap.to(".fk-2", { scrollTrigger: { trigger: "body", scrub: 1.5 }, y: -150 });
         gsap.to(".fk-3", { scrollTrigger: { trigger: "body", scrub: 0.5 }, x: 100 });
+
+        // GRAPH EDITOR (SCROLL SYNC)
+        const path = document.getElementById('motionPath');
+        const ball = document.getElementById('animBall');
+        const graphSection = document.getElementById('graph-section');
+        const pathLength = path.getTotalLength();
+
+        window.addEventListener('scroll', () => {
+            const sectionTop = graphSection.offsetTop;
+            const sectionHeight = graphSection.offsetHeight;
+            const screenHeight = window.innerHeight;
+            const scrollY = window.scrollY;
+
+            let percent = (scrollY - (sectionTop - screenHeight)) / (sectionHeight + screenHeight);
+            percent = (percent - 0.2) * 1.5; 
+
+            if (percent < 0) percent = 0;
+            if (percent > 1) percent = 1;
+
+            const point = path.getPointAtLength(percent * pathLength);
+            ball.setAttribute('cx', point.x);
+            ball.setAttribute('cy', point.y);
+        });
 
         function scrollGallery(direction) {
             const container = document.getElementById('galeria');
