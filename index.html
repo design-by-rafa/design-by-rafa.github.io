@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-PT" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rafael Soares - Portfólio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Scripts do GSAP e ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <style>
+        body {
+            background-color: #E7E7E7; 
+            color: #111111;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVEGAÇÃO / MENU --- */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 40px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 9000;
+            mix-blend-mode: difference;
+            color: #FFF;
+            pointer-events: none;
+        }
+
+        .nav-logo {
+            font-weight: 900;
+            font-size: 20px;
+            letter-spacing: -0.05em;
+            text-decoration: none;
+            color: #FFF;
+            pointer-events: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            pointer-events: auto;
+        }
+
+        .nav-links a {
+            color: #FFF;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.5;
+        }
+
+        @media (max-width: 600px) {
+            .nav-links { display: none; }
+        }
+
+        /* --- SESSÃO DE INTRODUÇÃO --- */
+        .intro-section {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .intro-name {
+            font-family: 'Idiqlat', 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 600;
+            margin: 0;
+            color: #111;
+            text-align: center;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .intro-role {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #555;
+            margin-top: 15px;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.6;
+        }
+
+        .scroll-text {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .scroll-line {
+            width: 2px;
+            height: 50px;
+            background-color: #111;
+            animation: scrollAnim 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+            transform-origin: top;
+        }
+
+        @keyframes scrollAnim {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            50.1% { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        /* --- SESSÃO DOS SOFTWARES --- */
+        .hero-section {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            position: relative; 
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 11vw, 14rem); 
+            font-weight: 900;
+            line-height: 1.2; 
+            letter-spacing: -0.05em;
+            text-align: center;
+            margin: 0;
+            z-index: 1;
+            text-transform: lowercase;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .line-mask {
+            overflow: hidden; 
+            display: block;
+            padding: 0.15em 0.1em;
+            margin: -0.15em -0.1em;
+        }
+
+        .line-mask + .line-mask {
+            margin-top: -0.35em;
+        }
+
+        .line-text {
+            display: inline-block;
+            transform: translateY(110%);
+        }
+
+        .software-instruction {
+            margin-top: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0; 
+            transform: translateY(10px);
+            z-index: 2;
+        }
+
+        .float-wrapper {
+            position: absolute; 
+            z-index: 10;
+            animation: float 5s ease-in-out infinite;
+            opacity: 0;
+            transform: scale(0); 
+        }
+
+        .pos-ae { top: 15%; right: 18%; animation-delay: 0s; }
+        .pos-figma { bottom: 20%; left: 15%; animation-delay: 0.7s; }
+        .pos-pr { top: 25%; left: 20%; animation-delay: 1.4s; }
+        .pos-ps { bottom: 15%; right: 10%; animation-delay: 2.1s; } 
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); } 
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .software-tag {
+            display: flex;
+            align-items: center;
+            width: 80px;  
+            height: 80px; 
+            border-radius: 24px;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .software-tag.active { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2); }
+        .tag-ae { background-color: #000033; border: 1px solid rgba(153, 153, 255, 0.3); }
+        .tag-ae.active { border-color: rgba(153, 153, 255, 0.8); }
+        .tag-figma { background-color: #1A1A1A; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .tag-figma.active { border-color: rgba(255, 255, 255, 0.4); }
+        .tag-pr { background-color: #2A004F; border: 1px solid rgba(234, 119, 255, 0.3); }
+        .tag-pr.active { border-color: rgba(234, 119, 255, 0.8); }
+        .tag-ps { background-color: #001E36; border: 1px solid rgba(49, 168, 255, 0.3); }
+        .tag-ps.active { border-color: rgba(49, 168, 255, 0.8); }
+
+        .icon-box {
+            min-width: 80px; height: 80px;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .svg-logo { width: 48px; height: 48px; object-fit: contain; }
+
+        .tag-text {
+            color: #FFFFFF; white-space: nowrap; font-size: 16px; font-weight: 600;
+            opacity: 0; transform: translateX(-15px);
+        }
+
+        /* --- SESSÃO DE PROJETOS --- */
+        .portfolio-wrapper {
+            width: 100%; max-width: 1100px;
+            padding: 0 40px 100px 40px; box-sizing: border-box; margin: 0 auto;
+        }
+
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; width: 100%; }
+
+        .project-card {
+            background-color: #FFFFFF; border-radius: 20px; padding: 30px;
+            border: 1px solid #D1D1D1; box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+            display: none; opacity: 0; transform: translateY(20px);
+            cursor: pointer; transition: box-shadow 0.3s ease;
+        }
+
+        .project-card:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
+        .project-title { font-weight: 800; margin-bottom: 12px; font-size: 22px; letter-spacing: -0.02em; }
+        .project-badge { font-size: 13px; color: #444; background: #F0F0F0; padding: 6px 12px; border-radius: 8px; display: inline-block; font-weight: 600;}
+
+        /* --- SESSÃO DE CURSOS --- */
+        .courses-section {
+            width: 100%; max-width: 1100px; margin: 0 auto;
+            padding: 60px 40px 100px 40px; box-sizing: border-box;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900;
+            letter-spacing: -0.04em; margin-bottom: 60px; text-transform: lowercase; color: #111;
+        }
+
+        .courses-list { display: flex; flex-direction: column; border-top: 2px solid #111; }
+
+        .course-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 0; border-bottom: 1px solid #CCC;
+            transition: padding-left 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding-right 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease, border-color 0.4s ease;
+            cursor: default;
+        }
+
+        .course-item:hover { padding-left: 24px; padding-right: 24px; background-color: #F4F4F4; border-bottom-color: #111; }
+        .course-info { display: flex; flex-direction: column; gap: 12px; }
+        .course-name { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; margin: 0; letter-spacing: -0.02em; color: #111; }
+        .course-institution { font-size: 14px; text-transform: uppercase; letter-spacing: 0.15em; color: #666; font-weight: 600; }
+        .course-year { font-size: 1.2rem; font-weight: 600; color: #999; font-variant-numeric: tabular-nums; }
+
+        /* --- SESSÃO DE COMPETÊNCIAS --- */
+        .skills-section {
+            width: 100%; max-width: 1100px; margin: 0 auto;
+            padding: 60px 40px 100px 40px; box-sizing: border-box;
+        }
+
+        .skills-container { display: flex; flex-wrap: wrap; gap: 16px; }
+
+        .skill-tag {
+            font-size: 1.1rem; font-weight: 600; color: #111; padding: 16px 32px;
+            border: 1px solid #CCC; border-radius: 50px; background-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: default;
+        }
+
+        .skill-tag:hover { background-color: #111; color: #FFF; border-color: #111; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        /* --- SESSÃO QUEM SOU EU --- */
+        .about-section {
+            width: 100%; max-width: 1100px; margin: 0 auto;
+            padding: 60px 40px 180px 40px; box-sizing: border-box;
+        }
+
+        .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        @media (max-width: 900px) { .about-content { grid-template-columns: 1fr; gap: 80px; } }
+
+        .about-text { font-size: clamp(1.1rem, 2.2vw, 1.5rem); line-height: 1.5; color: #333; margin-bottom: 40px; }
+        .about-text strong { color: #111; font-weight: 800; }
+
+        /* Botão Descarregar Currículo */
+        .btn-cv {
+            display: inline-block;
+            padding: 16px 36px;
+            background-color: #111;
+            color: #FFF;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-cv:hover {
+            transform: translateY(-4px);
+            background-color: #333;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Pilha de Postcards */
+        .postcard-pile { position: relative; width: 100%; height: 500px; display: flex; justify-content: center; align-items: center; perspective: 1000px; cursor: pointer; }
+        .pile-instruction { position: absolute; bottom: -30px; font-size: 13px; font-weight: 600; color: #888; letter-spacing: 0.1em; text-transform: uppercase; }
+        
+        .postcard-container {
+            position: absolute; background: white; padding: 12px 12px 50px 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 4px; width: 280px;
+            user-select: none; will-change: transform;
+        }
+
+        .postcard-photo { width: 100%; aspect-ratio: 4/5; object-fit: cover; background-color: #eee; display: block; }
+
+        /* --- SESSÃO CONTACTOS (RODAPÉ) --- */
+        .contact-section {
+            width: 100vw;
+            min-height: 80vh;
+            background-color: #111; 
+            color: #E7E7E7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 40px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .contact-title {
+            font-size: clamp(3rem, 10vw, 10rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            margin: 0 0 40px 0;
+            text-transform: lowercase;
+            overflow: hidden; 
+        }
+
+        .contact-email {
+            font-size: clamp(0.6rem, 2vw, 1.6rem);
+            font-weight: 600;
+            color: #e7e7e7;
+            text-decoration: none;
+            border-bottom: 2px solid rgba(231, 231, 231, 0.3);
+            padding-bottom: 4px;
+            transition: border-color 0.3s ease, color 0.3s ease;
+            margin-bottom: 80px;
+        }
+
+        .contact-email:hover { border-color: #E7E7E7; color: #FFF; }
+
+        .social-links { display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; }
+
+        .social-links a {
+            color: #888; text-decoration: none; font-weight: 600; font-size: 13px;
+            letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-links a:hover { color: #FFF; transform: translateY(-2px); display: inline-block; }
+
+        /* --- ESTILOS DO MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(17, 17, 17, 0.6); backdrop-filter: blur(8px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none;
+        }
+
+        .modal-content {
+            background: #F8F8F8; width: 90%; max-width: 800px; max-height: 90vh;
+            border-radius: 24px; padding: 40px; position: relative;
+            transform: scale(0.95); overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.2); text-align: left;
+        }
+
+        .modal-close { position: absolute; top: 24px; right: 32px; background: none; border: none; font-size: 32px; color: #111; cursor: pointer; transition: transform 0.2s ease, color 0.2s ease; }
+        .modal-close:hover { color: #ff3366; transform: scale(1.1) rotate(90deg); }
+        .modal-image-placeholder { width: 100%; height: 350px; background: #1A1A1A; color: #fff; border-radius: 16px; display: flex; justify-content: center; align-items: center; margin-bottom: 32px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+        .modal-title { font-size: 32px; font-weight: 900; margin: 0 0 16px 0; letter-spacing: -0.02em; color: #111; }
+        .modal-desc { font-size: 16px; color: #555; line-height: 1.6; margin-top: 24px; }
+    </style>
+</head>
+<body>
+
+    <nav class="main-nav">
+        <a href="#inicio" class="nav-logo">RS.</a>
+        <div class="nav-links">
+            <a href="#projetos">Projetos</a>
+            <a href="#competencias">Competências</a>
+            <a href="#sobre">Sobre Mim</a>
+            <a href="#contactos">Contactos</a>
+        </div>
+    </nav>
+
+    <section class="intro-section" id="inicio">
+        <h1 class="intro-name">Rafael Soares</h1>
+        <p class="intro-role">designer</p>
+        
+        <div class="scroll-indicator">
+            <span class="scroll-text">role para baixo</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <div class="hero-section softwares-section" id="projetos">
+        <h1 class="main-title">
+            <span class="line-mask"><span class="line-text">softwares</span></span>
+            <span class="line-mask"><span class="line-text">que eu uso</span></span>
+        </h1>
+        
+        <div class="software-instruction">clique no app para ver os projetos.</div>
+        
+        <div class="float-wrapper pos-ae">
+            <div class="software-tag tag-ae" data-target=".ae">
+                <div class="icon-box">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Adobe_After_Effects_CC_icon.svg" class="svg-logo" alt="After Effects">
+                </div>
+                <span class="tag-text">After Effects</span>
+            </div>
+        </div>
+
+        <div class="float-wrapper pos-figma">
+            <div class="software-tag tag-figma" data-target=".figma">
+                <div class="icon-box">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" class="svg-logo" alt="Figma">
+                </div>
+                <span class="tag-text">Figma</span>
+            </div>
+        </div>
+
+        <div class="float-wrapper pos-pr">
+            <div class="software-tag tag-pr" data-target=".pr">
+                <div class="icon-box">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/Adobe_Premiere_Pro_CC_icon.svg" class="svg-logo" alt="Premiere">
+                </div>
+                <span class="tag-text">Premiere Pro</span>
+            </div>
+        </div>
+
+        <div class="float-wrapper pos-ps">
+            <div class="software-tag tag-ps" data-target=".ps">
+                <div class="icon-box">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" class="svg-logo" alt="Photoshop">
+                </div>
+                <span class="tag-text">Photoshop</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="portfolio-wrapper">
+        <div class="portfolio-grid">
+            <div class="project-card ae pr">
+                <div class="project-title">Vídeo AXXIS Contabilidade</div>
+                <div class="project-badge">Motion & Edição</div>
+            </div>
+            <div class="project-card ps figma">
+                <div class="project-title">Identidade Visual Jams</div>
+                <div class="project-badge">Design Gráfico</div>
+            </div>
+            <div class="project-card figma">
+                <div class="project-title">Carrossel Gen Z Finance</div>
+                <div class="project-badge">UI/Design</div>
+            </div>
+            <div class="project-card figma ae">
+                <div class="project-title">UI Animation Concept</div>
+                <div class="project-badge">UI/Motion</div>
+            </div>
+            <div class="project-card ps">
+                <div class="project-title">Manipulação de Imagem 3D</div>
+                <div class="project-badge">Retoque Digital</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SESSÃO: CURSOS E CERTIFICAÇÕES -->
+    <section class="courses-section">
+        <h2 class="section-title">cursos & certificações</h2>
+        <div class="courses-list">
+            <div class="course-item">
+                <div class="course-info">
+                    <h3 class="course-name">Do Zero ao Motion</h3>
+                    <span class="course-institution">Layer Lemonade</span>
+                </div>
+                <span class="course-year">2026</span>
+            </div>
+            <div class="course-item">
+                <div class="course-info">
+                    <h3 class="course-name">+ Motion + Design</h3>
+                    <span class="course-institution">Layer Lemonade</span>
+                </div>
+                <span class="course-year">2025</span>
+            </div>
+            <div class="course-item">
+                <div class="course-info">
+                    <h3 class="course-name">Animação Digital</h3>
+                    <span class="course-institution">Instituto Federal Goiano</span>
+                </div>
+                <span class="course-year">2025</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="skills-section" id="competencias">
+        <h2 class="section-title">competências</h2>
+        <div class="skills-container">
+            <div class="skill-tag">Motion Design</div>
+            <div class="skill-tag">UI / UX Animation</div>
+            <div class="skill-tag">Edição de Vídeo</div>
+            <div class="skill-tag">Animação 2D / 3D</div>
+            <div class="skill-tag">Design Gráfico</div>
+            <div class="skill-tag">Tipografia Animada</div>
+            <div class="skill-tag">Prototipagem</div>
+        </div>
+    </section>
+
+    <section class="about-section" id="sobre">
+        <h2 class="section-title">quem sou eu?</h2>
+        <div class="about-content">
+            <div class="about-text-container">
+                <p class="about-text">
+                    Sou o <strong>Rafael Soares</strong>, um designer apaixonado por transformar conceitos estáticos em narrativas visuais dinâmicas. Com foco em <strong>Motion Design</strong> e <strong>UI/UX</strong>, busco equilibrar técnica e criatividade para entregar soluções que não apenas atraiam o olhar, mas que também facilitem a vida do utilizador.
+                    <br><br>
+                    O meu objetivo é unir o poder da animação com o design estratégico, criando interfaces intuitivas e vídeos que comunicam mensagens de forma clara e impactante.
+                </p>
+                <a href="#" class="btn-cv" download>descarregar currículo</a>
+            </div>
+            
+            <div class="postcard-pile" id="postcardPile">
+                <!-- Postcards -->
+                <div class="postcard-container">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop" class="postcard-photo" alt="Foto 1">
+                </div>
+                <div class="postcard-container">
+                    <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=600&auto=format&fit=crop" class="postcard-photo" alt="Foto 2">
+                </div>
+                <div class="postcard-container">
+                    <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=600&auto=format&fit=crop" class="postcard-photo" alt="Foto 3">
+                </div>
+                <div class="pile-instruction">clique para alternar</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="contact-section" id="contactos">
+        <h2 class="contact-title">
+            <span class="line-mask"><span class="contact-line">vamos</span></span>
+            <span class="line-mask"><span class="contact-line">conversar?</span></span>
+        </h2>
+        
+        <a href="mailto:rafael.soarestx@icloud.com" class="contact-email">me manda um e-mail (prometo responder)!</a>
+        
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/rafael-soares-01969a230/" target="_blank">LinkedIn</a>
+            <a href="https://www.instagram.com/ownedbyrafa" target="_blank">Instagram</a>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">✕</button>
+            <div class="modal-image-placeholder">Espaço para Vídeo/Imagem</div>
+            <h2 class="modal-title" id="modalTitle">Título do Projeto</h2>
+            <div id="modalBadges"></div>
+            <p class="modal-desc">Descrição detalhada do teu projeto. Aqui podes explicar o processo criativo, os desafios superados e o impacto do trabalho final no cliente.</p>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from(".intro-name", { y: 40, opacity: 0, duration: 1.2, ease: "power3.out", delay: 0.2 });
+        gsap.from(".intro-role", { y: 20, opacity: 0, duration: 1, ease: "power3.out", delay: 0.6 });
+        gsap.from(".scroll-indicator", { opacity: 0, duration: 1, delay: 1.5 });
+
+        // Timeline Softwares
+        const masterTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".softwares-section",
+                start: "top 60%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        masterTl.to(".line-text", { y: "0%", duration: 1, ease: "power4.out", stagger: 0.15, delay: 0.2 })
+                .to(".float-wrapper", { scale: 1, opacity: 1, duration: 0.8, stagger: 0.15, ease: "back.out(1.5)" }, "-=0.6")
+                .to(".software-instruction", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, "-=0.2"); 
+
+        const modalOverlay = document.getElementById('projectModal');
+        const modalContent = document.querySelector('.modal-content');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBadges = document.getElementById('modalBadges');
+
+        const modalAnim = gsap.timeline({ paused: true });
+        modalAnim.to(modalOverlay, { opacity: 1, pointerEvents: "auto", duration: 0.3, ease: "power2.out" })
+                 .to(modalContent, { scale: 1, duration: 0.4, ease: "back.out(1.2)" }, "<0.1");
+
+        const fecharModal = () => { modalAnim.reverse(); document.body.style.overflow = 'auto'; };
+        closeModalBtn.addEventListener('click', fecharModal);
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) fecharModal(); });
+
+        const allProjects = document.querySelectorAll('.project-card');
+        allProjects.forEach(card => {
+            card.addEventListener('mouseenter', () => gsap.to(card, { y: -5, scale: 1.02, duration: 0.3, ease: "power2.out", overwrite: true }));
+            card.addEventListener('mouseleave', () => gsap.to(card, { y: 0, scale: 1, duration: 0.3, ease: "power2.out", overwrite: true }));
+            card.addEventListener('click', () => {
+                modalTitle.innerText = card.querySelector('.project-title').innerText;
+                modalBadges.innerHTML = '';
+                modalBadges.appendChild(card.querySelector('.project-badge').cloneNode(true));
+                modalAnim.play();
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        const tags = document.querySelectorAll('.software-tag');
+        let activeTag = null;
+        tags.forEach(tag => {
+            const iconBox = tag.querySelector('.icon-box');
+            const svgLogo = tag.querySelector('.svg-logo');
+            const text = tag.querySelector('.tag-text');
+            const targetClass = tag.getAttribute('data-target');
+
+            const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut", duration: 0.5 } });
+            tl.to(tag, { width: 210, height: 56, borderRadius: "28px" })
+              .to(iconBox, { minWidth: 56, height: 56 }, "<")
+              .to(svgLogo, { width: 32, height: 32 }, "<")
+              .to(text, { opacity: 1, x: 0, duration: 0.3 }, "-=0.2");
+            tag.animation = tl;
+
+            tag.addEventListener('mouseenter', () => { if (activeTag !== tag) tag.animation.play(); });
+            tag.addEventListener('mouseleave', () => { if (activeTag !== tag) tag.animation.reverse(); });
+            tag.addEventListener('click', () => {
+                if (activeTag === tag) {
+                    tag.classList.remove('active'); tag.animation.reverse(); activeTag = null;
+                    gsap.to(allProjects, { y: 20, opacity: 0, duration: 0.3, overwrite: true, onComplete: () => gsap.set(allProjects, { display: 'none' }) });
+                } else {
+                    if (activeTag) { activeTag.classList.remove('active'); activeTag.animation.reverse(); }
+                    tag.classList.add('active'); tag.animation.play(); activeTag = tag;
+                    gsap.to(allProjects, { y: 20, opacity: 0, duration: 0.2, overwrite: true, onComplete: () => {
+                        gsap.set(allProjects, { display: 'none' });
+                        const selected = document.querySelectorAll(targetClass);
+                        if(selected.length > 0) {
+                            gsap.set(selected, { display: 'block' });
+                            gsap.fromTo(selected, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", stagger: 0.1 });
+                        }
+                    }});
+                }
+            });
+        });
+
+        const animateSection = (selector, trigger) => {
+            gsap.from(selector, {
+                scrollTrigger: { trigger: trigger, start: "top 80%" },
+                y: 40, opacity: 0, duration: 1, ease: "power3.out"
+            });
+        };
+
+        animateSection(".courses-section .section-title", ".courses-section");
+        gsap.from(".course-item", { scrollTrigger: { trigger: ".courses-list", start: "top 85%" }, y: 40, opacity: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" });
+        animateSection(".skills-section .section-title", ".skills-section");
+        gsap.from(".skill-tag", { scrollTrigger: { trigger: ".skills-section", start: "top 80%" }, y: 30, opacity: 0, duration: 0.6, stagger: 0.08, ease: "back.out(1.5)", delay: 0.2 });
+        animateSection(".about-section .section-title", ".about-section");
+        gsap.from(".about-text", { scrollTrigger: { trigger: ".about-section", start: "top 80%" }, y: 30, opacity: 0, duration: 1, ease: "power3.out", delay: 0.3 });
+        gsap.from(".btn-cv", { scrollTrigger: { trigger: ".about-section", start: "top 75%" }, y: 20, opacity: 0, duration: 0.8, ease: "back.out(1.5)", delay: 0.5 });
+
+        const pile = document.getElementById('postcardPile');
+        const cards = Array.from(document.querySelectorAll('.postcard-container'));
+        
+        const slots = [
+            { z: 3, x: -20, y: -10, rot: -6 },
+            { z: 2, x: 30, y: 20, rot: 4 },
+            { z: 1, x: 10, y: -40, rot: -2 }
+        ];
+
+        let cardState = [0, 1, 2]; 
+        let isAnimatingPile = false;
+
+        cards.forEach((card, i) => {
+            gsap.fromTo(card, 
+                { scale: 0, opacity: 0, x: 0, y: 0, rotation: 0 },
+                {
+                    scrollTrigger: { trigger: ".about-section", start: "top 70%" },
+                    scale: 1, opacity: 1, x: slots[i].x, y: slots[i].y, rotation: slots[i].rot, zIndex: slots[i].z,
+                    duration: 1, delay: i * 0.15, ease: "back.out(1.5)"
+                }
+            );
+        });
+
+        pile.addEventListener('mousemove', (e) => {
+            if (isAnimatingPile) return;
+            const rect = pile.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) / rect.width - 0.5;
+            const mouseY = (e.clientY - rect.top) / rect.height - 0.5;
+            
+            cards.forEach((card, index) => {
+                const slotIndex = cardState.indexOf(index);
+                const slot = slots[slotIndex];
+                const factor = (3 - slotIndex) * 10;
+                
+                gsap.to(card, {
+                    x: slot.x + (mouseX * factor),
+                    y: slot.y + (mouseY * factor),
+                    rotation: slot.rot + (mouseX * 5),
+                    duration: 0.5,
+                    ease: "power2.out",
+                    overwrite: true 
+                });
+            });
+        });
+
+        pile.addEventListener('mouseleave', () => { 
+            if (isAnimatingPile) return;
+            cards.forEach((card, index) => {
+                const slotIndex = cardState.indexOf(index);
+                const slot = slots[slotIndex];
+                gsap.to(card, {
+                    x: slot.x, y: slot.y, rotation: slot.rot,
+                    duration: 0.8, ease: "elastic.out(1, 0.75)", overwrite: true
+                });
+            });
+        });
+
+        pile.addEventListener('click', () => {
+            if (isAnimatingPile) return;
+            isAnimatingPile = true;
+            const topCardIndex = cardState[0];
+            const topCard = cards[topCardIndex];
+
+            gsap.to(topCard, {
+                x: 200, y: -50, rotation: 15, duration: 0.4, ease: "power2.in", overwrite: true,
+                onComplete: () => {
+                    cardState.push(cardState.shift());
+                    gsap.set(topCard, { zIndex: slots[2].z });
+                    
+                    cards.forEach((card, index) => {
+                        const slotIndex = cardState.indexOf(index);
+                        const slot = slots[slotIndex];
+                        gsap.to(card, {
+                            x: slot.x, y: slot.y, rotation: slot.rot, zIndex: slot.z,
+                            duration: 0.5, ease: "back.out(1.2)", overwrite: true
+                        });
+                    });
+                    
+                    setTimeout(() => { isAnimatingPile = false; }, 500);
+                }
+            });
+        });
+
+        gsap.from(".contact-line", {
+            scrollTrigger: { trigger: ".contact-section", start: "top 75%" },
+            y: "110%", duration: 1.2, ease: "power4.out", stagger: 0.15
+        });
+
+        gsap.from(".contact-email, .social-links a", {
+            scrollTrigger: { trigger: ".contact-section", start: "top 70%" },
+            y: 30, opacity: 0, duration: 0.8, ease: "power3.out", stagger: 0.1, delay: 0.4
+        });
+    </script>
+</body>
+</html>
